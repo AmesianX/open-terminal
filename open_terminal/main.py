@@ -58,7 +58,7 @@ async def verify_api_key(
 app = FastAPI(
     title="Open Terminal",
     description="A remote terminal API.",
-    version="0.4.0",
+    version="0.4.2",
 )
 app.add_middleware(
     CORSMiddleware,
@@ -149,6 +149,17 @@ class MkdirRequest(BaseModel):
     path: str = Field(
         ...,
         description="Directory path to create. Parent directories are created automatically.",
+    )
+
+
+class MoveRequest(BaseModel):
+    source: str = Field(
+        ...,
+        description="Path to the file or directory to move.",
+    )
+    destination: str = Field(
+        ...,
+        description="Destination path (new location).",
     )
 
 
@@ -553,6 +564,32 @@ async def delete_entry(
     except OSError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"path": target, "type": "directory" if is_dir else "file"}
+
+
+@app.post(
+    "/files/move",
+    include_in_schema=False,
+    dependencies=[Depends(verify_api_key)],
+)
+async def move_entry(request: MoveRequest):
+    source = os.path.abspath(request.source)
+    destination = os.path.abspath(request.destination)
+
+    if not await aiofiles.os.path.exists(source):
+        raise HTTPException(status_code=404, detail="Source path not found")
+
+    dest_parent = os.path.dirname(destination)
+    if not await aiofiles.os.path.isdir(dest_parent):
+        raise HTTPException(status_code=400, detail="Destination parent directory not found")
+
+    if await aiofiles.os.path.exists(destination):
+        raise HTTPException(status_code=409, detail="Destination already exists")
+
+    try:
+        await asyncio.to_thread(shutil.move, source, destination)
+    except OSError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"source": source, "destination": destination}
 
 
 @app.post(

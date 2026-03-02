@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.2] - 2026-03-02
+
+### Added
+
+- 📦 **Move endpoint** (POST /files/move) for moving and renaming files and directories. Uses shutil.move for cross-filesystem support. Hidden from OpenAPI schema.
+
 ## [0.4.1] - 2026-03-01
 
 ### Fixed
