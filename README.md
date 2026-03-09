@@ -152,7 +152,7 @@ docker run -d --name open-terminal -p 8000:8000 \
   ghcr.io/open-webui/open-terminal
 ```
 
-When enabled, Open Terminal reads the `X-User-Id` header from the Open WebUI proxy, provisions a dedicated Linux user on first access, and runs all commands as that user via `sudo -u`. Each user's home directory is `chmod 700` — the kernel enforces isolation, no custom sandbox needed.
+Each `X-User-Id` header maps to a dedicated Linux user with its own home directory. Files, commands, terminals, and port visibility are all isolated via standard Unix permissions.
 
 ## API Docs
 
