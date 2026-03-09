@@ -152,7 +152,7 @@ docker run -d --name open-terminal -p 8000:8000 \
   ghcr.io/open-webui/open-terminal
 ```
 
-Each `X-User-Id` header maps to a dedicated Linux user with its own home directory. Files, commands, terminals, and port visibility are all isolated via standard Unix permissions.
+Each `X-User-Id` header maps to a dedicated Linux user with its own home directory. Files, commands, terminals, and port visibility are all isolated via standard Unix permissions. Network ports share a single namespace (visibility is filtered, but users can technically reach each other's services).
 
 ## API Docs
 
