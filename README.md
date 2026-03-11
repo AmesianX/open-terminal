@@ -150,6 +150,7 @@ For small, trusted deployments you can enable per-user isolation inside a single
 
 ```bash
 docker run -d --name open-terminal -p 8000:8000 \
+  -v open-terminal:/home \
   -e OPEN_TERMINAL_MULTI_USER=true \
   -e OPEN_TERMINAL_API_KEY=your-secret-key \
   ghcr.io/open-webui/open-terminal
