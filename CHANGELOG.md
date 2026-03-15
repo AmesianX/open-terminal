@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.11.19] - 2026-03-15
+
+### Fixed
+
+- 🔒 **`write_file` permission denied in multi-user subdirectories** — file writes into directories created by `run_command` failed because `mkdir -p` (via `sudo -u`) creates directories with default `755` permissions, leaving the server process without group-write access. `UserFS` now creates parent directories as the provisioned user (`sudo -u mkdir -p`) and sets `2770` (setgid + group rwx) on the entire directory chain, matching the home directory's permissions. Writing to the home root was unaffected. ([#70](https://github.com/open-webui/open-terminal/issues/70))
+
 ## [0.11.18] - 2026-03-15
 
 ### Added
